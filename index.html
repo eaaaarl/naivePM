@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Naive Pattern Matching</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .highlight {
+      background-color: yellow;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container mt-5">
+  <h1>Naive Pattern Matching</h1>
+  <div class="row mt-4">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="textInput">Text:</label>
+        <input type="text" class="form-control" id="textInput" placeholder="Enter text...">
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="patternInput">Pattern:</label>
+        <input type="text" class="form-control" id="patternInput" placeholder="Enter pattern...">
+      </div>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col">
+      <button type="button" class="btn btn-primary" onclick="findMatches()">Find Matches</button>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col">
+      <h3>Text:</h3>
+      <p id="textResult"></p>
+      <p id="matchCount"></p>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+  function findMatches() {
+    const text = document.getElementById('textInput').value;
+    const pattern = document.getElementById('patternInput').value;
+    const matches = naivePatternMatch(text, pattern);
+    const textResult = document.getElementById('textResult');
+    const matchCount = document.getElementById('matchCount');
+    
+    let highlightedText = '';
+    let currentIndex = 0;
+    matches.forEach((matchIndex, index) => {
+      highlightedText += text.substring(currentIndex, matchIndex);
+      highlightedText += `<span class="highlight">${text.substring(matchIndex, matchIndex + pattern.length)}</span>`;
+      currentIndex = matchIndex + pattern.length;
+
+      if (index !== matches.length - 1) {
+        highlightedText += ', ';
+      }
+    });
+    highlightedText += text.substring(currentIndex);
+
+    textResult.innerHTML = highlightedText;
+    matchCount.textContent = `Total matches found: ${matches.length}`;
+  }
+
+  function naivePatternMatch(text, pattern) {
+    const textLength = text.length;
+    const patternLength = pattern.length;
+    const matches = [];
+
+    // Loop through the text
+    for (let i = 0; i <= textLength - patternLength; i++) {
+      let j;
+      // Check if pattern matches starting at position i in the text
+      for (j = 0; j < patternLength; j++) {
+        if (text[i + j] !== pattern[j]) {
+          // If characters don't match, break the inner loop
+          break;
+        }
+      }
+      // If inner loop completed without breaking, pattern found at position i
+      if (j === patternLength) {
+        matches.push(i); // Pattern found at index i
+      }
+    }
+    return matches;
+  }
+</script>
+
+</body>
+</html>
