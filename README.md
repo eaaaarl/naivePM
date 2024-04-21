@@ -6,5 +6,3 @@ Fritzie,
 Jolisa,
 Albarracin
 -----
-Algorithm & Complexit
-Maam Jename Tadlip
